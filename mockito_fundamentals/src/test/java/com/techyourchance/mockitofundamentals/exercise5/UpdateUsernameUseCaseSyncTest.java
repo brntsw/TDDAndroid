@@ -13,9 +13,12 @@ import static com.techyourchance.mockitofundamentals.exercise5.networking.Update
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
@@ -31,30 +34,31 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class UpdateUsernameUseCaseSyncTest {
 
     public static final String USER_ID = "user_id";
     public static final String USERNAME = "username";
 
-    UpdateUsernameHttpEndpointSync updateUsernameHttpEndpointSyncMock;
-    UsersCache usersCacheMock;
-    EventBusPoster eventBusPosterMock;
+    @Mock UpdateUsernameHttpEndpointSync updateUsernameHttpEndpointSyncMock;
+    @Mock UsersCache usersCacheMock;
+    @Mock EventBusPoster eventBusPosterMock;
 
     UpdateUsernameUseCaseSync SUT;
 
     @Before
     public void setUp() throws Exception {
-        updateUsernameHttpEndpointSyncMock = mock(UpdateUsernameHttpEndpointSync.class);
-        usersCacheMock = mock(UsersCache.class);
-        eventBusPosterMock = mock(EventBusPoster.class);
         SUT = new UpdateUsernameUseCaseSync(updateUsernameHttpEndpointSyncMock, usersCacheMock, eventBusPosterMock);
         success();
     }
 
     @Test
     public void updateUsername_success_userIdAndUsernamePassedToEndpoint() throws NetworkErrorException {
+        //Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
+        //Act
         SUT.updateUsernameSync(USER_ID, USERNAME);
+        //Assert
         verify(updateUsernameHttpEndpointSyncMock, times(1)).updateUsername(ac.capture(), ac.capture());
         List<String> captures = ac.getAllValues();
         assertThat(captures.get(0), is(USER_ID));
