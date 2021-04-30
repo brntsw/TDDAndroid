@@ -15,7 +15,7 @@ interface FetchUserUseCaseSync {
         private final Status mStatus;
 
         @Nullable
-        private final User mUser;
+        private final User mUser; //Test the requirement (nullable)
 
         public UseCaseResult(Status status, @Nullable User user) {
             mStatus = status;
